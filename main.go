@@ -4,23 +4,36 @@ import ("fmt")
 
 func main() {
 
-  
-names := []string{"yoshi","mario","peach","luigi"}
+  age:= 45 
+  fmt.Println(age <=50)
+  fmt.Println(age >=50)
+
+  fmt.Println(age ==50)
+
+  fmt.Println(age !=50)
 
 
-  
-  // for i := 0; i < len(names); i++ {
-  //   fmt.Println("valur of x is: ", names[i])
-  // }
+  if age < 30 {
+    fmt.Println("age is less 30")
+  } else if age < 40 {
+    fmt.Println("age is less than 40")
+  } else {
+    fmt.Println("age is not less than 45 ")
+  }
 
-// for index, value := range names {
-//   fmt.Printf("valur of x is index: %v  is %v \n", index, value)
-// }
+names := [] string {"mario","luigi", "yoshi", "peache", "peache", "peache"}
 
-for _, value := range names {
-  fmt.Printf("valur of x is index:  is %v \n", value)
-}
+  for index, value := range names {
+    if index == 1 {
+      fmt.Println("continuinh at pos", index)
+      continue
+    }
 
-
+    if index >2 {
+      fmt.Println("breaking at pos", index)
+      break
+    }
+    fmt.Printf("the calue at pos %v is %v \n",index ,value)
+  }
 
 }
