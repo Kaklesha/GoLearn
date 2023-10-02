@@ -5,35 +5,25 @@ import (
 
 )
 
-var score = 99.5
+//var score = 99.5
+
+func updateName (x *string){
+  *x="wedge"
+}
 
 func main() {
-
- menu:= map[string] float64{
-   "soup": 4.99,
-   "pie": 7.99,
-   "salad": 6.99,
-   "coffee pudding": 3.55,
- }
-
- fmt.Println(menu) 
- fmt.Println("\n",menu["pie"])
-
-  for k, v := range menu {
-    fmt.Println(k," - ",v)
-  }
-
-  // ints as key type
-  phonebook := map[int]string{
-    23223323: "mario", 
-    897887897: "luigig", 
-    34342342: "peache",
-  }
-
-  fmt.Println(phonebook) 
-  fmt.Println("\n",phonebook[23223323])
+name:="tifa"
  
-  phonebook[897887897]= "bpwser"
+m:=&name
 
-  fmt.Println(phonebook) 
+ fmt.Println("memory address oa mane is: ",&name)
+fmt.Println(name)
+
+fmt.Println("memory address oa mane is: ",*m)
+*m="dddd"
+fmt.Println("memory address oa msse is: ",name)
+
+
+updateName(m)
+fmt.Println("memory address oa mane is: ",*m)
 }
