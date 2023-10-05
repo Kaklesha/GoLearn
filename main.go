@@ -1,39 +1,32 @@
 package main
 
 import (
-    "database/sql"
+   
     "fmt"
-    "time"
-
-    _ "github.com/mattn/go-sqlite3"
+    
+    "net/http"
+    "github.com/go-chi/chi/v5"
+    "github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-    db, err := sql.Open("sqlite3", "./database.db")
+
+    router:=chi.NewRouter()
+    router.Use(middleware.Logger)
+    router.Get("/hello", basicHandler)
+ 
+    server:= &http.Server{
+        Addr: ":3000",
+        Handler: router,
+
+    }
+    err:= server.ListenAndServe()
     if err != nil {
-        panic(err)
+        fmt.Println("failed to listen to server",err)
     }
 
-    defer db.Close()
+}
 
-    statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS time (id INTEGER PRIMARY KEY, time DATETIME)")
-    if err != nil {
-        panic(err)
-    }
-    statement.Exec()
-
-    statement, err = db.Prepare("INSERT INTO time (time) VALUES (?)")
-    if err != nil {
-        panic(err)
-    }
-    statement.Exec(time.Now().Add(time.Hour * 2))
-
-    rows, _ := db.Query("SELECT id, time FROM time")
-    var id int
-    var cTime time.Time
-
-    for rows.Next() {
-        rows.Scan(&id, &cTime)
-        fmt.Println(id, cTime)
-    }
+func basicHandler(w http.ResponseWriter, r *http.Request){
+    w.Write([]byte("hello world!"))
 }
