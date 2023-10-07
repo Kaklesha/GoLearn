@@ -1,17 +1,21 @@
 package main
 
 import (
-   
-    "fmt"
-    "GoLearn/application"
-    "context"
-    
+	"GoLearn/application"
+	"context"
+	"fmt"
+	"os"
+	"os/signal"
 )
 
 func main() {
+	//defer database.Close()
+	app := application.New()
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 
-    app:=application.New()
-    err:= app.Start(context.TODO())
-    if err != nil {
-        fmt.Println("failed to start app: ",app) }
+	err := app.Start(ctx)
+	if err != nil {
+		fmt.Println("failed to start app: ", err)
+	}
 }
