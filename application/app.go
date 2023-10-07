@@ -54,6 +54,44 @@ func (a *App) Start(ctx context.Context) error {
 		return fmt.Errorf("failed to starting server: %w", err)
 	}
 
+	statement, err := a.db.Prepare(`CREATE TABLE IF NOT EXISTS line_item (
+		item_id INTEGER PRIMARY KEY,
+		 quantity INTEGER,
+		 price INTEGER)`)
+
+	if err != nil {
+		panic(err)
+	}
+	statement.Exec()
+
+	// statement, err = a.db.Prepare("INSERT INTO time (time) VALUES (?)")
+	// if err != nil {
+	//     panic(err)
+	// }
+
+	statement, err = a.db.Prepare(`CREATE TABLE IF NOT EXISTS order (
+        order_id INTEGER PRIMARY KEY, 
+        customer_id INTEGER, 
+        line_items TEXT, 
+        created_at DATETIME,
+        shipped_at DATETIME,
+        completed_at DATETIME)`)
+	if err != nil {
+		panic(err)
+	}
+	statement.Exec()
+
+	// statement.Exec(time.Now().Add(time.Hour * 2))
+
+	// rows, _ := db.Query("SELECT id, time FROM time")
+	// var id int
+	// var cTime time.Time
+
+	// for rows.Next() {
+	//     rows.Scan(&id, &cTime)
+	//     fmt.Println(id, cTime)
+	// }
+
 	defer func() {
 		if err := a.db.Close(); err != nil {
 			fmt.Println("failed to close db", err)
