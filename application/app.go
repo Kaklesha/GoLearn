@@ -12,11 +12,11 @@ import (
 
 type App struct {
 	router http.Handler
-	db     *sql.DB
+	DB     *sql.DB
 }
 
 // func connectWithBD() *sql.DB {
-// 	database, err := sql.Open("sqlite3", "./database.db")
+// 	database, err := sql.Open("sqlite3", "./database.DB")
 //     if err != nil {
 // 		log.Fatal(err)
 // 	}
@@ -24,21 +24,22 @@ type App struct {
 // }
 
 func New() *App {
-	db, err := sql.Open("sqlite3", "./database.db")
+	DB, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		panic(err)
 	}
 	app := &App{
-		router: loadRoutes(),
-		db:     db,
+		DB: DB,
 	}
+	app.loadRoutes()
+
 	return app
 }
 
 // func New() *App{
 // 	app:= & App{
 // 		router: loadRoutes(),
-// 		db: connectWithBD()
+// 		DB: connectWithBD()
 // 	}
 // 	return app
 // }
@@ -49,12 +50,12 @@ func (a *App) Start(ctx context.Context) error {
 		Handler: a.router,
 	}
 
-	err := a.db.Ping()
+	err := a.DB.Ping()
 	if err != nil {
 		return fmt.Errorf("failed to starting server: %w", err)
 	}
 
-	statement, err := a.db.Prepare(`CREATE TABLE IF NOT EXISTS line_item (
+	statement, err := a.DB.Prepare(`CREATE TABLE IF NOT EXISTS line_item (
 		item_id INTEGER PRIMARY KEY,
 		 quantity INTEGER,
 		 price INTEGER)`)
@@ -64,12 +65,12 @@ func (a *App) Start(ctx context.Context) error {
 	}
 	statement.Exec()
 
-	// statement, err = a.db.Prepare("INSERT INTO time (time) VALUES (?)")
+	// statement, err = a.DB.Prepare("INSERT INTO time (time) VALUES (?)")
 	// if err != nil {
 	//     panic(err)
 	// }
 
-	statement, err = a.db.Prepare(`CREATE TABLE IF NOT EXISTS order (
+	statement, err = a.DB.Prepare(`CREATE TABLE IF NOT EXISTS order (
         order_id INTEGER PRIMARY KEY, 
         customer_id INTEGER, 
         line_items TEXT, 
@@ -83,7 +84,7 @@ func (a *App) Start(ctx context.Context) error {
 
 	// statement.Exec(time.Now().Add(time.Hour * 2))
 
-	// rows, _ := db.Query("SELECT id, time FROM time")
+	// rows, _ := DB.Query("SELECT id, time FROM time")
 	// var id int
 	// var cTime time.Time
 
@@ -93,8 +94,8 @@ func (a *App) Start(ctx context.Context) error {
 	// }
 
 	defer func() {
-		if err := a.db.Close(); err != nil {
-			fmt.Println("failed to close db", err)
+		if err := a.DB.Close(); err != nil {
+			fmt.Println("failed to close DB", err)
 		}
 	}()
 
@@ -117,5 +118,5 @@ func (a *App) Start(ctx context.Context) error {
 		defer cancel()
 		return server.Shutdown(timeout)
 	}
-	return nil
+
 }

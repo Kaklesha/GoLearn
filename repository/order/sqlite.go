@@ -7,7 +7,7 @@ import (
 )
 
 type SqlRepo struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func orderIDKey(id uint) string {
@@ -16,7 +16,7 @@ func orderIDKey(id uint) string {
 }
 
 func (r *SqlRepo) Insert(order model.Order) error {
-	statement, err := r.db.Prepare(`INSERT INTO order (
+	statement, err := r.DB.Prepare(`INSERT INTO order (
 			customer_id,
 			line_items,
 			created_at,
@@ -35,7 +35,7 @@ func (r *SqlRepo) Insert(order model.Order) error {
 func (r *SqlRepo) FindById(order_id uint) (model.Order, error) {
 	model_order := model.Order{}
 	line_item := ""
-	rows, err := r.db.Query(`SELECT * FROM order WHERE order_id =(?))`, order_id)
+	rows, err := r.DB.Query(`SELECT * FROM order WHERE order_id =(?))`, order_id)
 	if err != nil {
 		return model_order, fmt.Errorf("failed to prepare insert order: %w", err)
 	}
@@ -47,7 +47,7 @@ func (r *SqlRepo) FindById(order_id uint) (model.Order, error) {
 
 func (r *SqlRepo) DeleteByID(order_id uint) error {
 
-	_, err := r.db.Query(`DELETE FROM order WHERE order_id =(?))`, order_id)
+	_, err := r.DB.Query(`DELETE FROM order WHERE order_id =(?))`, order_id)
 	if err != nil {
 		return fmt.Errorf("failed to prepare delete order: %w", err)
 	}
@@ -82,7 +82,7 @@ func (r *SqlRepo) DeleteByID(order_id uint) error {
 
 func (r *SqlRepo) Update(model_order model.Order) error {
 
-	statement, err := r.db.Prepare(`UPDATE order SET
+	statement, err := r.DB.Prepare(`UPDATE order SET
         customer_id = ?,
         line_items = ?,
         created_at = ?,
@@ -99,6 +99,23 @@ func (r *SqlRepo) Update(model_order model.Order) error {
 	}
 	return nil
 
+}
+
+func (r *SqlRepo) FindAll() ([]model.Order, error) {
+	array := []model.Order{}
+	model_order := model.Order{}
+	line_item := ""
+	rows, err := r.DB.Query(`SELECT * FROM order`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare insert order: %w", err)
+	}
+	for rows.Next() {
+		rows.Scan(&model_order.OrderID, &model_order.CustomerID, &line_item, &model_order.CreatedAt, &model_order.ShippedAt, &model_order.CompletedAt)
+		model_order.UnmarshalLineItems(line_item)
+		array = append(array, model_order)
+	}
+
+	return array, nil
 }
 
 // func main() {
