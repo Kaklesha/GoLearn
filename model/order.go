@@ -1,7 +1,7 @@
 package model
 
 import (
-	"database/sql"
+	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -20,26 +20,22 @@ type LineItem struct {
 	Price    uint `json:"price"`
 }
 
-func (o *Order) MarshallLineItems() string {
-	res := ""
-	for index, item := range o.LineItems {
-		if index != 0 {
-			res += fmt.Sprintf(",%v", item.ItemID)
-		} else {
-			res += fmt.Sprint(item.ItemID)
-		}
+func (o *Order) MarshalLineItems() string {
+	js, err := json.Marshal(o.LineItems[0])
+	if err != nil {
+		panic(err)
 	}
-
-	return res
+	items := string(js)
+	for _, item := range o.LineItems[1:] {
+		js, err := json.Marshal(item)
+		if err != nil {
+			panic(err)
+		}
+		items += fmt.Sprintf(", %v", string(js))
+	}
+	return fmt.Sprintf(`{"line_items":[%v]}`, items)
 }
 
-func (o *Order) UnmarshallLineItems(ids string, db *sql.DB) {
-
-	rows, _ := db.Query("SELECT * FROM line_item WHERE item_id IN (?)", items)
-	item := LineItem{}
-
-	for rows.Next() {
-		rows.Scan(&item.ItemID, &item.Price, &item.Quantity)
-		o.LineItems = append(o.LineItems, item)
-	}
+func (o *Order) UnmarshalLineItems(data string) {
+	json.Unmarshal([]byte(data), o)
 }
