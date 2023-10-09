@@ -16,16 +16,16 @@ func orderIDKey(id uint) string {
 }
 
 func (r *SqlRepo) Insert(order model.Order) error {
-	statement, err := r.DB.Prepare(`INSERT INTO order (
+	statement, err := r.DB.Prepare(`INSERT INTO ` + "`order`" + ` (
 			customer_id,
 			line_items,
 			created_at,
 			shipped_at,
-			completed at) VALUES (?, ?, ?, ?, ?)`)
+			completed_at) VALUES (?, ?, ?, ?, ?)`)
 	if err != nil {
 		return fmt.Errorf("failed to prepare insert order: %w", err)
 	}
-	_, err = statement.Exec(order.CustomerID, order.LineItems, order.CreatedAt, order.CreatedAt, order.ShippedAt, order.CompletedAt)
+	_, err = statement.Exec(order.CustomerID, order.MarshalLineItems(), order.CreatedAt, order.ShippedAt, order.CompletedAt)
 	if err != nil {
 		return fmt.Errorf("failed to insert order: %w", err)
 	}
@@ -35,19 +35,20 @@ func (r *SqlRepo) Insert(order model.Order) error {
 func (r *SqlRepo) FindById(order_id uint) (model.Order, error) {
 	model_order := model.Order{}
 	line_item := ""
-	rows, err := r.DB.Query(`SELECT * FROM order WHERE order_id =(?))`, order_id)
+	rows, err := r.DB.Query(`SELECT * FROM `+"`order`"+` WHERE order_id =(?)`, order_id)
 	if err != nil {
 		return model_order, fmt.Errorf("failed to prepare insert order: %w", err)
 	}
-	rows.Scan(&model_order.OrderID, &model_order.CustomerID, &line_item, &model_order.CreatedAt, &model_order.ShippedAt, &model_order.CompletedAt)
-
+	for rows.Next() {
+		rows.Scan(&model_order.OrderID, &model_order.CustomerID, &line_item, &model_order.CreatedAt, &model_order.ShippedAt, &model_order.CompletedAt)
+	}
 	model_order.UnmarshalLineItems(line_item)
 	return model_order, nil
 }
 
 func (r *SqlRepo) DeleteByID(order_id uint) error {
 
-	_, err := r.DB.Query(`DELETE FROM order WHERE order_id =(?))`, order_id)
+	_, err := r.DB.Query(`DELETE FROM `+"`order`"+` WHERE order_id =(?)`, order_id)
 	if err != nil {
 		return fmt.Errorf("failed to prepare delete order: %w", err)
 	}
@@ -82,18 +83,18 @@ func (r *SqlRepo) DeleteByID(order_id uint) error {
 
 func (r *SqlRepo) Update(model_order model.Order) error {
 
-	statement, err := r.DB.Prepare(`UPDATE order SET
+	statement, err := r.DB.Prepare(`UPDATE ` + "`order`" + ` SET
         customer_id = ?,
         line_items = ?,
         created_at = ?,
         shipped_at = ?,
-        completed at = ?
+        completed_at = ?
         WHERE order_id = ?`)
 	if err != nil {
 		return fmt.Errorf("failed to prepare Update order: %w", err)
 	}
 
-	_, err = statement.Exec(model_order.CustomerID, model_order.MarshalLineItems(), model_order.CreatedAt, model_order.CreatedAt, model_order.ShippedAt, model_order.CompletedAt, model_order.OrderID)
+	_, err = statement.Exec(model_order.CustomerID, model_order.MarshalLineItems(), model_order.CreatedAt, model_order.ShippedAt, model_order.CompletedAt, model_order.OrderID)
 	if err != nil {
 		return fmt.Errorf("failed to update order: %w", err)
 	}
@@ -103,13 +104,14 @@ func (r *SqlRepo) Update(model_order model.Order) error {
 
 func (r *SqlRepo) FindAll() ([]model.Order, error) {
 	array := []model.Order{}
-	model_order := model.Order{}
-	line_item := ""
-	rows, err := r.DB.Query(`SELECT * FROM order`)
+
+	rows, err := r.DB.Query(`SELECT * FROM ` + "`order`" + ``)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare insert order: %w", err)
 	}
 	for rows.Next() {
+		model_order := model.Order{}
+		line_item := ""
 		rows.Scan(&model_order.OrderID, &model_order.CustomerID, &line_item, &model_order.CreatedAt, &model_order.ShippedAt, &model_order.CompletedAt)
 		model_order.UnmarshalLineItems(line_item)
 		array = append(array, model_order)

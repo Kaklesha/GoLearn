@@ -55,22 +55,22 @@ func (a *App) Start(ctx context.Context) error {
 		return fmt.Errorf("failed to starting server: %w", err)
 	}
 
-	statement, err := a.DB.Prepare(`CREATE TABLE IF NOT EXISTS line_item (
-		item_id INTEGER PRIMARY KEY,
-		 quantity INTEGER,
-		 price INTEGER)`)
+	// statement, err := a.DB.Prepare(`CREATE TABLE IF NOT EXISTS line_item (
+	// 	item_id INTEGER PRIMARY KEY,
+	// 	 quantity INTEGER,
+	// 	 price INTEGER)`)
 
-	if err != nil {
-		panic(err)
-	}
-	statement.Exec()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// statement.Exec()
 
 	// statement, err = a.DB.Prepare("INSERT INTO time (time) VALUES (?)")
 	// if err != nil {
 	//     panic(err)
 	// }
 
-	statement, err = a.DB.Prepare(`CREATE TABLE IF NOT EXISTS order (
+	statement, err := a.DB.Prepare(`CREATE TABLE IF NOT EXISTS` + "`order`" + `(
         order_id INTEGER PRIMARY KEY, 
         customer_id INTEGER, 
         line_items TEXT, 
