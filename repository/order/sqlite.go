@@ -48,11 +48,26 @@ func (r *SqlRepo) FindById(order_id uint) (model.Order, error) {
 
 func (r *SqlRepo) DeleteByID(order_id uint) error {
 
-	_, err := r.DB.Query(`DELETE FROM `+"`order`"+` WHERE order_id =(?)`, order_id)
+	// _, err := r.DB.Query(`DELETE FROM `+"`order`"+` WHERE order_id = (?)`, order_id)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to prepare delete order: %w", err)
+	// }
+	// return nil
+
+	//_, err := r.DB.Query(`DELETE FROM `+"`order`"+` WHERE order_id = ?`, order_id)
+	statement, err := r.DB.Prepare(`DELETE FROM ` + "`order`" + ` WHERE order_id = ?`)
 	if err != nil {
 		return fmt.Errorf("failed to prepare delete order: %w", err)
 	}
+
+	_, err = statement.Exec(order_id)
+	if err != nil {
+		return fmt.Errorf("failed to prepare delete EXEC order: %w", err)
+	}
+
+	fmt.Println("Сделано")
 	return nil
+
 }
 
 // func (r *SqlRepo) UpdateById(colunm model.Order, value string, order_id uint) (model.Order, error) {
