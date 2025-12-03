@@ -5,6 +5,27 @@ import (
 	"math"
 )
 
+// exercise: Loops and funcs + by using Set
+func Sqrt(x float64) float64 {
+	z := float64(1)
+	//init Set empty
+	m := make(map[float64]bool)
+	var count int
+	for count = 1; count < 15; count++ {
+		z -= (z*z - x) / (2 * z)
+		//iterate Set for check
+		_, found := m[z]
+		if found {
+			fmt.Printf("z is %v\n", z)
+			return z
+		}
+		fmt.Println(z)
+		//add value to Set
+		m[z] = true
+	}
+	return z
+}
+
 var someNamw = "heel"
 
 // if and else with a short statement
@@ -26,6 +47,9 @@ func sqrt(x float64) string {
 }
 
 func main() {
+
+	fmt.Printf("Answer is %v\n", Sqrt(2))
+
 	fmt.Println(
 		pow(3, 2, 10),
 		pow(3, 3, 20),
