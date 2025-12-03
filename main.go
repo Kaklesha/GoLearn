@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math"
+	"runtime"
+	"time"
 )
 
 // exercise: Loops and funcs + by using Set
@@ -45,8 +47,64 @@ func sqrt(x float64) string {
 	}
 	return fmt.Sprint(math.Sqrt(x))
 }
+func stackingDefersCallView() {
+	fmt.Println("counting")
+	for i := 0; i < 10; i++ {
+		defer fmt.Println(i)
+	}
+	fmt.Println("StackingDone")
+}
 
 func main() {
+	//Same below but example with func
+	// stackingDefersCallView()
+	//Stacking defers calls
+	fmt.Println("counting")
+	for i := 0; i < 10; i++ {
+		defer fmt.Println(i)
+	}
+	fmt.Println("StackingDone")
+	//defer
+	defer fmt.Println("FILO Iam last but i was first ")
+
+	//Switch with no condition instead of if-then-else chaining to lightly and simply
+	t := time.Now()
+	switch {
+	case t.Hour() < 12:
+		fmt.Println("Good mooning!")
+	case t.Hour() < 17:
+		fmt.Println("Good afternoon")
+	default:
+		fmt.Println("Good evening")
+
+	}
+
+	//Switch evaluation order
+	fmt.Println("When's Saturday?")
+	today := time.Now().Weekday()
+	switch time.Saturday {
+	case today + 0:
+		fmt.Println("Today.")
+	case today + 1:
+		fmt.Println("Tomorrow.")
+	case today + 2:
+		fmt.Println("In to days.")
+	default:
+		fmt.Println("Too far away.")
+
+	}
+
+	//Switch
+	fmt.Print("Go runs on ")
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		fmt.Println("macOS")
+	case "linux":
+		fmt.Println("Linux")
+	default:
+		//windows, freebsd ..etc
+		fmt.Println("s%.\n", os)
+	}
 
 	fmt.Printf("Answer is %v\n", Sqrt(2))
 
@@ -73,7 +131,7 @@ func main() {
 		sum += sum
 	}
 	fmt.Println(sum)
-	// for ;sum < 1000; {
+	// for sum:=1 ;sum < 1000; {
 	// 	sum += sum
 	// }
 	// fmt.Println(sum)
