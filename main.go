@@ -1,37 +1,84 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
-var someNamw="heel"
+var someNamw = "heel"
+
+// if and else with a short statement
+func pow(x, n, lim float64) float64 {
+	if v := math.Pow(x, n); v < lim {
+		return v
+	} else {
+		fmt.Printf("%g>=%g\n", v, lim)
+	}
+	//can't use v here , though
+	return lim
+}
+
+func sqrt(x float64) string {
+	if x < 0 {
+		return sqrt(-x) + "i"
+	}
+	return fmt.Sprint(math.Sqrt(x))
+}
 
 func main() {
+	fmt.Println(
+		pow(3, 2, 10),
+		pow(3, 3, 20),
+	)
+	fmt.Println(sqrt(2), sqrt(-4))
 
-   age:= 35
-   name:="shss"
+	// sum := 0
+	// for i := 0; i < 10; i++ {
+	// 	sum += i
+	// }
+	// fmt.Println(sum)
 
-   //Print
-   fmt.Print("hello, ")
-   fmt.Print("world!")
-   fmt.Print("hello, \n ")
+	// loop forever
 
-   //Println
-   fmt.Println("me name",age, "ddddd", name)
+	// for {
+	// 	}
 
-   //Printf(formatted) %_ = format specifier
-   fmt.Printf("me age is %v and my name is %v \n",age,name)
+	//while in Go
+	sum := 1
+	for sum < 1000 {
+		sum += sum
+	}
+	fmt.Println(sum)
+	// for ;sum < 1000; {
+	// 	sum += sum
+	// }
+	// fmt.Println(sum)
+	age := 35
+	name := "shss"
 
-   fmt.Printf("me age is %q and my name is %q \n",age,name)
- 
-   fmt.Printf("me age is %T and my name is %T \n",age,name)
+	//Print
+	fmt.Print("hello, ")
+	fmt.Print("world!")
+	fmt.Print("hello, \n ")
 
-   fmt.Printf("you scored  %f points \n",255.33)
+	//Println
+	fmt.Println("me name", age, "ddddd", name)
 
-   fmt.Printf("you scored  %0.1f points \n",255.33)
+	//Printf(formatted) %_ = format specifier
+	fmt.Printf("me age is %v and my name is %v \n", age, name)
 
-   //Sprintf (save formatted string)
+	fmt.Printf("me age is %q and my name is %q \n", age, name)
 
-  var srt =  fmt.Sprintf(" my age is %v and my name is %v \n",age , name)
+	fmt.Printf("me age is %T and my name is %T \n", age, name)
 
-  fmt.Println("the saved stirfg is ",srt)
+	fmt.Printf("you scored  %f points \n", 255.33)
+
+	fmt.Printf("you scored  %0.1f points \n", 255.33)
+
+	//Sprintf (save formatted string)
+
+	var srt = fmt.Sprintf(" my age is %v and my name is %v \n", age, name)
+
+	fmt.Println("the saved stirfg is ", srt)
 
 }
