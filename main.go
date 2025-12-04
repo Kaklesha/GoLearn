@@ -19,7 +19,19 @@ func pointerViewer() {
 
 }
 
+type Vertex struct {
+	X int
+	Y int
+}
+
 func main() {
+	//Struct fields
+	v := Vertex{1, 2}
+	v.X = 4
+	fmt.Println(v.X)
+	//Structs
+	fmt.Println(Vertex{1, 2})
+
 	//Pointers AND 	//dereferencing OR indirecting !!!!
 	pointerViewer()
 	fmt.Println("====================================")
