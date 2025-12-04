@@ -25,6 +25,11 @@ type Vertex struct {
 }
 
 func main() {
+	//Pointers to structs
+	vv := Vertex{2, 3}
+	p := &vv
+	p.X = 1e9 // OR (*p).X = 1e9 However is cumbersome
+	fmt.Println(vv)
 	//Struct fields
 	v := Vertex{1, 2}
 	v.X = 4
