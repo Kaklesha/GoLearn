@@ -2,6 +2,15 @@ package main
 
 import "fmt"
 
+// func convert(foos []Foo) []Bar{
+//   n:= len(foos)
+//   bars:= make([]Bar,0,n)//создали срез с заданой емкостью
+//   for _, foo:= range foos {
+//     bars = append(bars, fooToBar(foo)) //// foToBar - lorem for example
+//   }
+//   return bars
+// }
+
 func pointerViewer() {
 	var pp *int
 	fmt.Println(pp)
@@ -62,35 +71,90 @@ func main() {
 	pointerViewer()
 	fmt.Println("====================================")
 	// var ages [3] int = [3]int{20,25, 30}
-	//	var ages = [3]int{20, 25, 30}
+	var ages = [3]int{20, 25, 30}
 
-	//	names := [4]string{"fff", "gggg", "vvvvv", "bbbbb"}
+	names := [4]string{"fff", "gggg", "vvvvv", "bbbbb"}
 
-	//fmt.Println(ages, len(ages))
-	//fmt.Println(names, len(names))
+	fmt.Println(ages, len(ages))
+	fmt.Println(names, len(names))
 
 	// //slice (use arrays under the hood)
-	//var scores = []int{100, 50, 60}
+	var scores = []int{100, 50, 60}
 
-	//	fmt.Println(scores, len(scores))
+	fmt.Println(scores, len(scores))
 
-	//scores[2] = 25
-	//scores = append(scores, 85)
+	scores[2] = 25
+	scores = append(scores, 85)
 
-	//fmt.Println(scores, len(scores))
+	fmt.Println(scores, len(scores))
 
 	////slice ranges
+	fmt.Println("//======slice=======")
+	fmt.Println(names, len(names))
 
-	//rangeOne := names[1:3]
+	rangeOne := names[1:3]
+	//slice default
+	rangeTwo := names[2:]
+	//slice default
+	rangeThree := names[:3]
 
-	//rangeTwo := names[2:]
+	fmt.Println(rangeOne, rangeTwo, rangeThree)
 
-	//rangeThree := names[:3]
+	scoresh := append(rangeOne, "koopa")
 
-	//fmt.Println(rangeOne, rangeTwo, rangeThree)
+	fmt.Println(scoresh, len(scores))
 
-	//scoresh := append(rangeOne, "koopa")
+	primes = [6]int{2, 3, 5, 7, 11, 13}
 
-	//fmt.Println(scoresh, len(scores))
+	var sss []int = primes[1:4]
+	vvv := &primes
+	var ttt []int = (*vvv)[0:4]
+	fmt.Println(sss)
+	fmt.Println(ttt)
 
+	namees := [4]string{
+		"john",
+		"Paul",
+		"george",
+		"rino",
+	}
+
+	fmt.Println(namees)
+
+	aa := namees[0:2]
+	bb := namees[1:3]
+	fmt.Println(aa, bb)
+
+	bb[0] = "XXXX"
+	fmt.Println(aa, bb)
+	fmt.Println(names)
+	//use make for create map\slice\channel, for slice init len and capacity
+	s1 := make([]int, 3, 6) // [0 0 0]  // 3 - len, 6 - power
+	s2 := s1[1:3]
+	s1[1] = 1
+	fmt.Println(s1, s2)
+	//Slice literals
+	qq := []int{2, 3, 5, 7, 11, 13}
+	fmt.Println(qq)
+
+	rrr := []bool{true, false, true}
+	fmt.Println(rrr)
+
+	ssss := []struct {
+		i int
+		b bool
+	}{
+		{2, true},
+		{3, false},
+	}
+	fmt.Println(ssss)
+	//NIl slices
+	var sssss []int
+	fmt.Println(sssss, len(sssss), cap(sssss))
+	if sssss == nil {
+		fmt.Println("nil!")
+	}
+	//appending to a slice
+	sssss = append(sssss, 3, 5, 6, 7)
+	fmt.Println(sssss, len(sssss), cap(sssss))
 }
