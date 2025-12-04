@@ -25,6 +25,17 @@ type Vertex struct {
 }
 
 func main() {
+	//Struct Literals
+	var (
+		v1 = Vertex{1, 2}
+		v2 = Vertex{X: 1} //Y:0 is implicit
+		v3 = Vertex{}     // X:0 and Y:0
+		//BELOW has type *Vertex // The special prefix "&"
+		//  returns a pointer to the struct value
+		pp = &Vertex{1, 2}
+	)
+	//Struct Literals demo
+	fmt.Println(v1, pp, v2, v3)
 	//Pointers to structs
 	vv := Vertex{2, 3}
 	p := &vv
