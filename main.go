@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 )
 
 type Vertex struct {
@@ -146,4 +147,58 @@ func main() {
 	fmt.Println("value is ", v, "Present? - ", ok)
 	//Exercise: Maps
 	fmt.Println(WordCount("I am learning go ! I wanna go to home"))
+
+	for fg := 0; fg < 5; fg++ {
+		go sleepGopher(fg)
+	}
+	time.Sleep(4 * time.Second)
+
+	//==================
+
+	sqr_ch := make(chan int)
+	cube_ch := make(chan int)
+	double_ch := make(chan int)
+
+	go square(sqr_ch)
+	go cube(cube_ch)
+	go double(double_ch)
+
+	sqr_ch <- 3
+	cube_ch <- 5
+	double_ch <- 7
+
+	for i := 1; i <= 3; i++ {
+		select {
+		case sqr_val := <-sqr_ch:
+			fmt.Println("Square:", sqr_val)
+		case cube_val := <-cube_ch:
+			fmt.Println("Square:", cube_val)
+		case double_val := <-double_ch:
+			fmt.Println("Square:", double_val)
+		default:
+			fmt.Println("Error ch")
+		}
+
+	}
+
+}
+
+func double(num_ch chan int) {
+	value := <-num_ch
+	num_ch <- value + value
+}
+
+func square(num_ch chan int) {
+	value := <-num_ch
+	num_ch <- value * value
+}
+
+func cube(num_ch chan int) {
+	value := <-num_ch
+	num_ch <- value * value * value
+}
+
+func sleepGopher(id int) {
+	time.Sleep(3 * time.Second)
+	fmt.Println("...", id, "...snore...")
 }
